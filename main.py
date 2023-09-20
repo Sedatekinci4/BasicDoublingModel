@@ -2,29 +2,29 @@ import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 import pandas as pd
-import seaborn as sns
 
 from keras import layers
 
 np.set_printoptions(precision=3, suppress=True)
+
 
 def print_ver():
     print(tf.__version__)
 
 
 def create_input_data():
-    input_data = np.linspace([1], [50], num=50)
+    created_input = np.linspace([1], [50], num=50)
     print("\nInput data has been created.\nThe input data is:\n")
-    print(input_data)
-    print(input_data.T)
-    return input_data
+    print(created_input)
+    print(created_input.T)
+    return created_input
 
 
 def create_output_data(data):
-    output_data = np.dot(data, 2)
+    created_output = np.dot(data, 2)
     print("\nThe output data is:\n")
-    print(output_data)
-    return output_data
+    print(created_output)
+    return created_output
 
 
 def prepare_dataset(input_raw, output_raw):
@@ -45,18 +45,18 @@ def split_data(dataset_to_split):
 
 def separate_feature_label():
     # Separating the labels from features The label is our value to predict
-    train_features = train_data.copy()
-    test_features = test_data.copy()
+    train_f = train_data.copy()
+    test_f = test_data.copy()
 
-    train_labels = train_features.pop('Output')
-    test_labels = test_features.pop('Output')
+    train_l = train_f.pop('Output')
+    test_l = test_f.pop('Output')
 
-    return train_features, train_labels, test_features, test_labels
+    return train_f, train_l, test_f, test_l
 
 
-def plot_loss(history):
-    plt.plot(history.history['loss'], label='loss')
-    plt.plot(history.history['val_loss'], label='val_loss')
+def plot_loss(history_loss):
+    plt.plot(history_loss.history['loss'], label='loss')
+    plt.plot(history_loss.history['val_loss'], label='val_loss')
     plt.ylim([0, 10])
     plt.xlabel('Epoch')
     plt.ylabel('Error [output]')
@@ -65,7 +65,7 @@ def plot_loss(history):
     plt.show()
 
 
-def plot_guess(p_x,p_y):
+def plot_guess(p_x, p_y):
     plt.scatter(train_features['Input'], train_labels, label='Data')
     plt.plot(p_x, p_y, color='k', label='Predictions')
     plt.xlabel('Input')
@@ -73,16 +73,16 @@ def plot_guess(p_x,p_y):
     plt.legend()
     plt.show()
 
+
 if __name__ == '__main__':
     print_ver()
 
-    input = create_input_data()
-    output = create_output_data(input)
+    input_data = create_input_data()
+    output_data = create_output_data(input_data)
 
-    dataset = prepare_dataset(input, output)
+    dataset = prepare_dataset(input_data, output_data)
     print("\nDataset has been created....\n")
     print(dataset)
-
 
     train_data, test_data = split_data(dataset)
     print(train_data)
@@ -130,7 +130,7 @@ if __name__ == '__main__':
     # (We will try to predict output from input
     guess = np.array(train_features['Input'])
 
-    # We created an numpy array made of the Horsepower values. Then Normalize it and fit the horsepower datas
+    # We created an numpy array made of the input values. Then Normalize it and fit the input datas
     guess_normalizer = layers.Normalization(input_shape=[1, ], axis=None)
     guess_normalizer.adapt(guess)
 
@@ -143,7 +143,7 @@ if __name__ == '__main__':
     # Prints the summary of model
     print(linear_model.summary())
 
-    # Prints the untrained model on first 10 Horsepower values.
+    # Prints the untrained model on first 10 input values.
     print(linear_model.predict(guess[:10]))
 
     # Configuring training procedure (LOOK LATER FOR SURE)
@@ -151,7 +151,7 @@ if __name__ == '__main__':
         optimizer=tf.keras.optimizers.Adam(learning_rate=0.1),
         loss='mean_absolute_error')
 
-    # we use keras model.fit to do the training for 100 epochs
+    # i used keras model.fit to do the training for 300 epochs
     # Epoch means: one complete pass of the training dataset through the algorithm
     history = linear_model.fit(
         train_features['Input'],
@@ -159,7 +159,7 @@ if __name__ == '__main__':
         epochs=300,
         # Suppress logging.
         verbose=0,
-        # Calculate validation results on 20% of the training data.
+        # Calculate validation results on 10% of the training data.
         validation_split=0.1)
 
     # Printing the models training process for last 5 elements
@@ -181,7 +181,7 @@ if __name__ == '__main__':
     x = tf.linspace(0.0, 250, 251)
     y = linear_model.predict(x)
 
-    z = linear_model.predict([450.5])
+    z = linear_model.predict([700.5])
     print(z)
     plot_guess(x, y)
 
