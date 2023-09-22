@@ -85,7 +85,9 @@ if __name__ == '__main__':
     print(dataset)
 
     train_data, test_data = split_data(dataset)
+    print("\nTrain datas are:\n")
     print(train_data)
+    print("\nTest features are:\n")
     print(test_data)
 
     # Inspecting our train set
@@ -181,7 +183,8 @@ if __name__ == '__main__':
     x = tf.linspace(0.0, 250, 251)
     y = linear_model.predict(x)
 
-    z = linear_model.predict([700.5])
+    z = linear_model.predict([100.5])
+    print("\nThe guessed value for the given input is: ")
     print(z)
     plot_guess(x, y)
 
@@ -189,3 +192,14 @@ if __name__ == '__main__':
     #     test_features, test_labels, verbose=0)
 
     print(pd.DataFrame(test_results, index=['Output Error']).T)
+
+    linear_model.save('duplicate_model.pb')
+
+    # Convert the model
+    converter = tf.lite.TFLiteConverter.from_saved_model(
+        'C:\\Users\\tades\\PycharmProjects\\ModelforDuplicate\\duplicate_model.pb')  # path to the SavedModel directory
+    tflite_model = converter.convert()
+
+    # Save the model.
+    with open('model.tflite', 'wb') as f:
+        f.write(tflite_model)
