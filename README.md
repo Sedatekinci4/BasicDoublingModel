@@ -516,3 +516,8 @@ linear_model      0.024977
 2023-09-22 14:58:23.014579: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:255] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
 
 Process finished with exit code 0
+```
+
+
+# Using model from somewhere else
+With a simple script like load_model.py, you can load and use tensorflow model from anywhere and any project as long as you have the right libs downloaded and the right path is selected for your model file.
